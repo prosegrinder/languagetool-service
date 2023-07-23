@@ -1,0 +1,39 @@
+name: Publish to npmjs
+
+on:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: npmjs-publish
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    uses: prosegrinder/.github/.github/workflows/npm-lint.yaml@main
+
+  test:
+    needs: lint
+    uses: prosegrinder/.github/.github/workflows/npm-test.yaml@main
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js LTS
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: lts/*
+      - name: NPM Clean Install
+        run: npm ci
+      - name: Dry-Run Publish to npmjs
+        id: dry-run
+        uses: JS-DevTools/npm-publish@v2
+        with:
+          dry-run: true
+          token: ${{ secrets.NPM_ACCESS_TOKEN }}
+      - name: Publish to npmjs
+        uses: JS-DevTools/npm-publish@v2
+        with:
+          token: ${{ secrets.NPM_ACCESS_TOKEN }}
