@@ -1,0 +1,35 @@
+{
+  "name": "languagetool-service",
+  "description": "A lightweight JavaScript library for managing a LanguageTool service.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec ./tests/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prosegrinder/languagetool-service.git"
+  },
+  "keywords": [
+    "languagetool",
+    "service"
+  ],
+  "author": "David L. Day <david@davidlday.com> (https://www.davidlday.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prosegrinder/languagetool-service/issues"
+  },
+  "homepage": "https://github.com/prosegrinder/languagetool-service#readme",
+  "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.4.4",
+    "chai": "^4.3.7",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsdoc": "^46.4.4",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.6"
+  }
+}
