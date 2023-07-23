@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  release:
+  bump-release:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     uses: prosegrinder/.github/.github/workflows/cz-bump-release.yaml@main
     secrets:
