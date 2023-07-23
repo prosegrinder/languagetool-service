@@ -4,7 +4,11 @@
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec ./tests/test.js"
+    "test": "mocha --reporter spec ./tests/test.js",
+    "clean": "rm -rf out/*",
+    "build": "tsc",
+    "rebuild": "npm run clean && npm run build",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
