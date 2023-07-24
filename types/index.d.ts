@@ -72,7 +72,9 @@ export interface ILanguageToolService {
   isUpdated(): boolean;
   update(): Promise<boolean>;
   version(): string;
-  reloadConfiguration(configuration: any): void;
+  getConfiguration(): any;
+  setConfiguration(configuration: any): void;
+  reloadConfiguration(configuration: any): Promise<boolean>;
   check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>;
   getState(): string;
   getURL(): string | undefined;
