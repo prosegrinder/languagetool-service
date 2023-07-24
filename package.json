@@ -35,5 +35,8 @@
     "eslint-plugin-jsdoc": "^46.4.4",
     "mocha": "^10.2.0",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "annotatedtext": "^1.1.4"
   }
 }
