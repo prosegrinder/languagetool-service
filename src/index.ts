@@ -20,7 +20,7 @@ export abstract class LanguageToolService implements ILanguageToolService {
   public readonly DEFAULT_CHECK_PATH: string = "/v2/check";
   public readonly DEFAULT_RULE_BASE_URI: string =
     "https://community.languagetool.org/rule/show/";
-  public readonly DEFAULT_RULE_URL_LANG: string = "en-US";
+  public readonly DEFAULT_RULE_URL_LANG: string = "en";
 
   public abstract start(): Promise<boolean>;
   public abstract stop(): Promise<boolean>;
