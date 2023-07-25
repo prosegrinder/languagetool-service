@@ -79,3 +79,18 @@ export interface ILanguageToolService {
   getState(): string;
   getURL(): string | undefined;
 }
+
+export interface ILanguageToolServiceConfiguration {
+  parameters: {
+    language: string;
+    motherTongue: string;
+    preferredVariants: string[];
+    disabledCategories: string[];
+    disabledRules: string[];
+    username: string;
+    apiKey: string;
+  };
+}
+
+export interface ILanguageToolServiceConfigurationParameters
+  extends ILanguageToolServiceConfiguration {}
