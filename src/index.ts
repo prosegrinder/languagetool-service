@@ -25,9 +25,18 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   protected _configuration: any;
   protected _state: string = this.STATES.STOPPED;
+  protected _ltUrl: string | undefined = undefined;
 
   constructor(configuration: ILanguageToolServiceConfiguration) {
     this.setConfiguration(configuration);
+  }
+
+  public getURL(): string | undefined {
+    return this._ltUrl;
+  }
+
+  public getState(): string {
+    return this._state;
   }
 
   public getConfiguration(): any {
@@ -46,6 +55,22 @@ export abstract class LanguageToolService implements ILanguageToolService {
     await this.stop();
     this._configuration = configuration;
     return this.start();
+  }
+
+  public start(): Promise<boolean> {
+    this._state = this.STATES.STARTING;
+    return new Promise((resolve) => {
+      this._state = this.STATES.READY;
+      resolve(true);
+    });
+  }
+
+  public stop(): Promise<boolean> {
+    this._state = this.STATES.STOPPING;
+    return new Promise((resolve) => {
+      this._state = this.STATES.STOPPED;
+      resolve(true);
+    });
   }
 
   public dispose(): Promise<boolean> {
@@ -97,44 +122,6 @@ export abstract class LanguageToolService implements ILanguageToolService {
           parameters["username"] = this._configuration.parameters.username;
           parameters["apiKey"] = this._configuration.parameters.apiKey;
         }
-        // this.PARAMETERS.forEach((serviceParameter) => {
-        //   const configKey = `${Constants.CONFIGURATION_LT}.${serviceParameter}`;
-        //   const value: string = this._configuration.get(configKey) as string;
-        //   if (value) {
-        //     parameters[serviceParameter] = value;
-        //   }
-        // });
-        // Make sure disabled rules and disabled categories do not contain spaces
-        // if (
-        //   this._configuration.has("LanguageTool.disabledRules")
-        // ) {
-        //   const disabledRules: string = this._configuration.get(
-        //     "LanguageTool.disabledRules",
-        //   ) as string;
-        //   if (disabledRules.split(" ").length > 1) {
-        //     reject(
-        //       new Error(
-        //         '"LanguageTool Linter > Language Tool: Disabled Rules" contains spaces. Please review the setting and remove any spaces.',
-        //       ),
-        //     );
-        //   }
-        // }
-        // if (
-        //   this._configuration.has(
-        //     Constants.CONFIGURATION_LT_DISABLED_CATEGORIES,
-        //   )
-        // ) {
-        //   const disabledCategories: string = this._configuration.get(
-        //     Constants.CONFIGURATION_LT_DISABLED_CATEGORIES,
-        //   ) as string;
-        //   if (disabledCategories.split(" ").length > 1) {
-        //     reject(
-        //       new Error(
-        //         '"Disabled Categories" contains spaces. Please review the setting and remove any spaces.',
-        //       ),
-        //     );
-        //   }
-        // }
 
         const formBody = Object.keys(parameters)
           .map(
@@ -188,13 +175,9 @@ export abstract class LanguageToolService implements ILanguageToolService {
     });
   }
 
-  public abstract start(): Promise<boolean>;
-  public abstract stop(): Promise<boolean>;
   public abstract isInstalled(): boolean;
   public abstract install(): Promise<boolean>;
   public abstract isUpdated(): boolean;
   public abstract update(): Promise<boolean>;
   public abstract version(): string;
-  public abstract getState(): string;
-  public abstract getURL(): string | undefined;
 }
