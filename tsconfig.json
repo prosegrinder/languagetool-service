@@ -1,20 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "lib": ["es6"],
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "module": "ES2022",
-    "rootDir": "src/",
     "moduleResolution": "Node",
     "allowJs": true,
     "declaration": true,
     "sourceMap": true,
-    "outDir": "out/",
+    "strict": true,
+    "outDir": "out",
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "types/index.d.ts"]
+  "include": ["src/**/*.ts", "types/**/*.d.ts", "tests/**/*.ts"]
 }

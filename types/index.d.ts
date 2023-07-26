@@ -1,6 +1,5 @@
 import { IAnnotatedtext } from "annotatedtext";
 
-// Interface - LanguageTool Match
 export interface ILanguageToolMatch {
   message: string;
   shortMessage: string;
@@ -29,23 +28,29 @@ export interface ILanguageToolMatch {
   contextForSureMatch: number;
 }
 
-// Interface LanguageTool Replacement
 export interface ILanguageToolReplacement {
   value: string;
   shortDescription: string;
 }
 
-// Interface - LanguageTool Response
+export interface ILanguageToolLanguage {
+  name: string;
+  code: string;
+  longCode: string;
+}
+
+export interface ILanguageToolInfo {
+  name: string;
+  version: string;
+  buildDate: string;
+  apiVersion: number;
+  premium: boolean;
+  premiumHint: string;
+  status: string;
+}
+
 export interface ILanguageToolResponse {
-  software: {
-    name: string;
-    version: string;
-    buildDate: string;
-    apiVersion: number;
-    premium: boolean;
-    premiumHint: string;
-    status: string;
-  };
+  software: ILanguageToolInfo;
   warnings: {
     incompleteResults: boolean;
   };
@@ -61,34 +66,46 @@ export interface ILanguageToolResponse {
   matches: ILanguageToolMatch[];
 }
 
-// Interface - LanguageTool Service
 export interface ILanguageToolService {
   start(): Promise<boolean>;
   stop(): Promise<boolean>;
   ping(): Promise<boolean>;
+  info(): Promise<ILanguageToolInfo>;
   dispose(): Promise<boolean>;
   isInstalled(): boolean;
   install(): Promise<boolean>;
   isUpdated(): boolean;
   update(): Promise<boolean>;
-  version(): string;
-  getConfiguration(): any;
-  setConfiguration(configuration: any): void;
-  reloadConfiguration(configuration: any): Promise<boolean>;
+  getConfiguration(): ILanguageToolServiceConfiguration;
+  setConfiguration(configuration: ILanguageToolServiceConfiguration): void;
+  reloadConfiguration(
+    configuration: ILanguageToolServiceConfiguration,
+  ): Promise<boolean>;
   check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>;
+  languages(): Promise<ILanguageToolLanguage[]>;
   getState(): string;
-  getURL(): string | undefined;
+  getBaseURL(): string | undefined;
 }
 
 export interface ILanguageToolServiceConfiguration {
+  host: string;
+  port: number;
+  basePath?: string;
+  checkPath?: string;
+  languagesPath?: string;
   parameters: {
     language: string;
-    motherTongue: string;
-    preferredVariants: string[];
-    disabledCategories: string[];
-    disabledRules: string[];
-    username: string;
-    apiKey: string;
+    username?: string;
+    apiKey?: string;
+    dicts?: string[];
+    motherTongue?: string;
+    preferredVariants?: string[];
+    enabledRules?: string[];
+    disabledRules?: string[];
+    enabledCategories?: string[];
+    disabledCategories?: string[];
+    enabledOnly?: string; // "true" | "false"
+    level?: string; // "default" | "picky"
   };
 }
 

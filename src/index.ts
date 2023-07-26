@@ -1,10 +1,13 @@
+import { IAnnotatedtext } from "annotatedtext";
 import * as Fetch from "node-fetch";
 import {
-  ILanguageToolService,
+  ILanguageToolInfo,
+  ILanguageToolLanguage,
   ILanguageToolResponse,
+  ILanguageToolService,
   ILanguageToolServiceConfiguration,
 } from "../types";
-import { IAnnotatedtext } from "annotatedtext";
+import { log } from "console";
 
 export abstract class LanguageToolService implements ILanguageToolService {
   public readonly STATES = {
@@ -15,7 +18,8 @@ export abstract class LanguageToolService implements ILanguageToolService {
     STOPPED: "stopped",
     ERROR: "error",
   };
-  public readonly DEFAULT_CHECK_PATH: string = "/v2/check";
+  public readonly DEFAULT_CHECK_PATH: string = "/check";
+  public readonly DEFAULT_LANGUAGES_PATH: string = "/languages";
   public readonly DEFAULT_RULE_BASE_URI: string =
     "https://community.languagetool.org/rule/show/";
   public readonly DEFAULT_RULE_URL_LANG: string = "en";
@@ -23,23 +27,26 @@ export abstract class LanguageToolService implements ILanguageToolService {
     annotation: [{ text: "Ping", offset: { start: 0, end: 4 } }],
   };
 
-  protected _configuration: any;
+  protected _configuration: ILanguageToolServiceConfiguration;
   protected _state: string = this.STATES.STOPPED;
-  protected _ltUrl: string | undefined = undefined;
+  protected _baseUrl: string | undefined = undefined;
+  protected _checkPath: string = this.DEFAULT_CHECK_PATH;
+  protected _languagesPath: string = this.DEFAULT_LANGUAGES_PATH;
 
   constructor(configuration: ILanguageToolServiceConfiguration) {
+    this._configuration = configuration;
     this.setConfiguration(configuration);
   }
 
-  public getURL(): string | undefined {
-    return this._ltUrl;
+  public getBaseURL(): string | undefined {
+    return this._baseUrl;
   }
 
   public getState(): string {
     return this._state;
   }
 
-  public getConfiguration(): any {
+  public getConfiguration(): ILanguageToolServiceConfiguration {
     return this._configuration;
   }
 
@@ -102,25 +109,22 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   public check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse> {
     return new Promise((resolve, reject) => {
-      const url = this.getURL();
+      const url = this.getBaseURL() + this._checkPath;
       if (url) {
         const parameters: Record<string, string> = {};
         parameters["data"] = JSON.stringify(annotatedText);
-        parameters["language"] = this._configuration.parameters.language;
-        parameters["motherTongue"] =
-          this._configuration.parameters.motherTongue;
-        parameters["preferredVariants"] =
-          this._configuration.parameters.preferredVariants.join(",");
-        parameters["disabledRules"] =
-          this._configuration.parameters.disabledRules.join(",");
-        parameters["disabledCategories"] =
-          this._configuration.parameters.disabledCategories.join(",");
-        if (
-          this._configuration.parameters.username &&
-          this._configuration.parameters.apiKey
-        ) {
-          parameters["username"] = this._configuration.parameters.username;
-          parameters["apiKey"] = this._configuration.parameters.apiKey;
+        for (const key in this._configuration.parameters) {
+          const value: unknown =
+            this._configuration.parameters[
+              key as keyof ILanguageToolServiceConfiguration["parameters"]
+            ];
+          if (value instanceof Array) {
+            parameters[key] = value.join(",");
+          } else if (typeof value === "string") {
+            parameters[key] = value;
+          } else {
+            throw new Error("Invalid parameter type.");
+          }
         }
 
         const formBody = Object.keys(parameters)
@@ -175,9 +179,46 @@ export abstract class LanguageToolService implements ILanguageToolService {
     });
   }
 
+  public languages(): Promise<ILanguageToolLanguage[]> {
+    return new Promise((resolve, reject) => {
+      const url = this.getBaseURL() + this._languagesPath;
+      if (this.STATES.READY === this.getState()) {
+        const options: Fetch.RequestInit = {
+          headers: {
+            Accepts: "application/json",
+          },
+          method: "GET",
+        };
+        Fetch.default(url, options)
+          .then((res) => res.json())
+          .then((json) => resolve(json as ILanguageToolLanguage[]))
+          .catch((err) => {
+            reject(err);
+          });
+      } else {
+        reject(new Error("LanguageTool not ready."));
+      }
+    });
+  }
+
+  public info(): Promise<ILanguageToolInfo> {
+    return new Promise((resolve, reject) => {
+      if (this.STATES.READY === this.getState()) {
+        this.check(this.PING_DATA)
+          .then((response: ILanguageToolResponse) => {
+            return resolve(response.software);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      } else {
+        reject(new Error("LanguageTool not ready."));
+      }
+    });
+  }
+
   public abstract isInstalled(): boolean;
   public abstract install(): Promise<boolean>;
   public abstract isUpdated(): boolean;
   public abstract update(): Promise<boolean>;
-  public abstract version(): string;
 }
