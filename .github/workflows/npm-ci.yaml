@@ -12,7 +12,7 @@ jobs:
 
   test:
     needs: lint
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     env:
       CI: true
     steps:
