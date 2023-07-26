@@ -12,7 +12,38 @@ jobs:
 
   test:
     needs: lint
-    uses: prosegrinder/.github/.github/workflows/npm-test.yaml@main
+    runs-on: macos-latest
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: lts/*
+          cache: "npm"
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Cache Homebrew
+        id: cache-homebrew
+        uses: actions/cache@v3
+        with:
+          path: ~/Library/Caches/Homebrew
+          key: ${{ runner.os }}-homebrew
+      - name: Install Languagetool & Start Service
+        id: install-brew
+        run: |
+          brew install languagetool && brew services start languagetool
+      - name: NPM Clean Install
+        run: npm ci
+      - name: NPM Build
+        run: npm run build --if-present
+      - name: Test
+        run: npm test
+      - name: Test Pack
+        run: npm pack
 
   cz-dry-run:
     needs: test
