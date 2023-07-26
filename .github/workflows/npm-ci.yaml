@@ -35,7 +35,9 @@ jobs:
       - name: Install Languagetool & Start Service
         id: install-brew
         run: |
-          brew install languagetool && brew services start languagetool
+          brew install languagetool \
+            && brew services start languagetool \
+            && brew services
       - name: NPM Clean Install
         run: npm ci
       - name: NPM Build
