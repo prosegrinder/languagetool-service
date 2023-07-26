@@ -2,13 +2,18 @@
   "name": "languagetool-service",
   "description": "A lightweight JavaScript library for managing a LanguageTool service.",
   "version": "0.0.0",
+  "type": "module",
+  "exports": "./out/index.js",
+  "types": "./types/index.d.ts",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec ./tests/test.js",
     "clean": "rm -rf out/*",
     "build": "tsc",
     "rebuild": "npm run clean && npm run build",
-    "lint": "eslint ."
+    "test-compile": "tsc",
+    "pretest": "npm run test-compile",
+    "test": "mocha --reporter spec ./out/tests/test.js",
+    "lint": "eslint ./src/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -26,9 +31,12 @@
   "homepage": "https://github.com/prosegrinder/languagetool-service#readme",
   "devDependencies": {
     "@types/chai": "^4.3.5",
+    "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
     "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
