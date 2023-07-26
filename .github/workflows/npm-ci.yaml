@@ -35,9 +35,10 @@ jobs:
       - name: Install Languagetool & Start Service
         id: install-brew
         run: |
-          brew install languagetool \
+          brew install languagetool jq \
+            && mkdir -p $(dirname $(brew services info languagetool | jq -r '.[].log_path')) \
             && brew services start languagetool \
-            && brew services
+            && brew services info languagetool | jq
       - name: NPM Clean Install
         run: npm ci
       - name: NPM Build
