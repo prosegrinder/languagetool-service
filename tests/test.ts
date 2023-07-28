@@ -49,7 +49,7 @@ class LanguageToolServiceMock extends LanguageToolService {
 }
 
 const configuration: ILanguageToolServiceConfiguration = {
-  host: "localhost",
+  host: "127.0.0.1",
   port: 8081,
   basePath: "v2",
   parameters: {

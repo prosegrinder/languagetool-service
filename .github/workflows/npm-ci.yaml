@@ -47,6 +47,7 @@ jobs:
         id: start-languagetool
         run: |
           brew services start languagetool \
+          && ps -ef | grep languagetool \
           && brew services info languagetool --json | jq
       - name: NPM Clean Install
         run: npm ci
