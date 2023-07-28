@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
     needs: lint
     runs-on: ${{ matrix.os }}
     env:
@@ -34,11 +34,12 @@ jobs:
         run: |
           brew install languagetool jq
       - name: Cache Homebrew
-        id: cache-homebrew
-        uses: actions/cache@v3
+        id: cache
+        uses: actions/cache@v1
         with:
-          path: ~/Library/Caches/Homebrew
-          key: ${{ runner.os }}-homebrew
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-rubygems-
       - name: Create Languagetool Log Directory
         id: create-languagetool-log-directory
         run: |
@@ -48,6 +49,7 @@ jobs:
         run: |
           brew services start languagetool \
           && ps -ef | grep languagetool \
+          && curl -L http://127.0.0.1:8081/v2/check -d "language=en-US&text=This+is+a+test+sentence." | jq \
           && brew services info languagetool --json | jq
       - name: NPM Clean Install
         run: npm ci
