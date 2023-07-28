@@ -11,8 +11,11 @@ jobs:
     uses: prosegrinder/.github/.github/workflows/npm-lint.yaml@main
 
   test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     needs: lint
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     env:
       CI: true
     steps:
@@ -26,19 +29,25 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+      - name: Install Languagetool
+        id: install-languagetool
+        run: |
+          brew install languagetool jq
       - name: Cache Homebrew
         id: cache-homebrew
         uses: actions/cache@v3
         with:
           path: ~/Library/Caches/Homebrew
           key: ${{ runner.os }}-homebrew
-      - name: Install Languagetool & Start Service
-        id: install-brew
+      - name: Create Languagetool Log Directory
+        id: create-languagetool-log-directory
         run: |
-          brew install languagetool jq \
-            && mkdir -p $(dirname $(brew services info languagetool | jq -r '.[].log_path')) \
-            && brew services start languagetool \
-            && brew services info languagetool | jq
+          mkdir -p $(dirname $(brew services info languagetool --json| jq -r '.[0].log_path'))
+      - name: Start Languagetool
+        id: start-languagetool
+        run: |
+          brew services start languagetool \
+          && brew services info languagetool --json | jq
       - name: NPM Clean Install
         run: npm ci
       - name: NPM Build
