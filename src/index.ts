@@ -7,7 +7,6 @@ import {
   ILanguageToolService,
   ILanguageToolServiceConfiguration,
 } from "../types";
-import { log } from "console";
 
 export abstract class LanguageToolService implements ILanguageToolService {
   public readonly STATES = {
