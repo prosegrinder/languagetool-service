@@ -6,6 +6,7 @@ import chaiAsPromised from "chai-as-promised";
 import { LanguageToolService } from "../src/index.js";
 import { ILanguageToolServiceConfiguration } from "../types/index.d";
 import { IAnnotatedtext } from "annotatedtext";
+import { config } from "process";
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -78,7 +79,9 @@ describe("#constructor()", function () {
 describe("#getURL()", function () {
   it("should return a valid URL", function () {
     const url: string = service.getBaseURL() as string;
-    url.should.equal("http://localhost:8081/v2");
+    url.should.equal(
+      `http://${configuration.host}:${configuration.port}/${configuration.basePath}`,
+    );
   });
 });
 
