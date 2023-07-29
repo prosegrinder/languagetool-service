@@ -6,7 +6,6 @@ import chaiAsPromised from "chai-as-promised";
 import { LanguageToolService } from "../src/index.js";
 import { ILanguageToolServiceConfiguration } from "../types/index.d";
 import { IAnnotatedtext } from "annotatedtext";
-import { config } from "process";
 
 chai.use(chaiAsPromised);
 chai.should();

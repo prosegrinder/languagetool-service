@@ -67,24 +67,34 @@ export interface ILanguageToolResponse {
 }
 
 export interface ILanguageToolService {
-  start(): Promise<boolean>;
-  stop(): Promise<boolean>;
-  ping(): Promise<boolean>;
-  info(): Promise<ILanguageToolInfo>;
-  dispose(): Promise<boolean>;
-  isInstalled(): boolean;
-  install(): Promise<boolean>;
-  isUpdated(): boolean;
-  update(): Promise<boolean>;
-  getConfiguration(): ILanguageToolServiceConfiguration;
-  setConfiguration(configuration: ILanguageToolServiceConfiguration): void;
-  reloadConfiguration(
-    configuration: ILanguageToolServiceConfiguration,
-  ): Promise<boolean>;
-  check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>;
-  languages(): Promise<ILanguageToolLanguage[]>;
-  getState(): string;
-  getBaseURL(): string | undefined;
+  start(): Promise<boolean>; // Start the service
+  stop(): Promise<boolean>; // Stop the service
+  ping(): Promise<boolean>; // Ping the service
+  info(): Promise<ILanguageToolInfo>; // Get info from the service
+  isInstalled(): boolean; // Check if the service is installed
+  install(): Promise<boolean>; // Install the service
+  isUpdated(): boolean; // Check if the service is updated
+  update(): Promise<boolean>; // Update the service
+  getConfiguration(): ILanguageToolServiceConfiguration; // Get the configuration
+  setConfiguration(configuration: ILanguageToolServiceConfiguration): void; // Set the configuration
+  check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>; // Check the annotated text
+  languages(): Promise<ILanguageToolLanguage[]>; // Get the list of languages
+  getState(): string; // Get the state of the service
+  getBaseURL(): string | undefined; // Get the base URL of the service
+  getCheckURL(): string | undefined; // Get the check URL of the service
+  getLanguagesURL(): string | undefined; // Get the languages URL of the service
+  getRuleURL(ruleId: string, language: string): string; // Get the rule base URI of the service
+  DEFAULT_CHECK_PATH: string; // "/check"
+  DEFAULT_LANGUAGES_PATH: string; // "/languages"
+  DEFAULT_RULE_BASE_URI: string; // "https://community.languagetool.org/rule/show/"
+  STATES: {
+    READY: string; // Service is ready
+    STARTING: string; // Service is starting
+    STOPPING: string; // Service is stopping
+    IDLE: string; // Service is idle
+    STOPPED: string; // Service is stopped
+    ERROR: string; // Service is in error state
+  };
 }
 
 export interface ILanguageToolServiceConfiguration {
@@ -93,6 +103,7 @@ export interface ILanguageToolServiceConfiguration {
   basePath?: string;
   checkPath?: string;
   languagesPath?: string;
+  ruleBaseURI?: string;
   parameters: {
     language: string;
     username?: string;
@@ -108,6 +119,3 @@ export interface ILanguageToolServiceConfiguration {
     level?: string; // "default" | "picky"
   };
 }
-
-export interface ILanguageToolServiceConfigurationParameters
-  extends ILanguageToolServiceConfiguration {}
