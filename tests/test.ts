@@ -20,9 +20,7 @@ interface ILanguageToolServiceMockConfiguration
 class LanguageToolServiceMock extends LanguageToolService {
   constructor(configuration: ILanguageToolServiceMockConfiguration) {
     // Ensure baseURL matches host and port
-    configuration.baseURL = new URL(
-      `http://${configuration.host}:${configuration.port}/v2`,
-    );
+    configuration.baseURL = `http://${configuration.host}:${configuration.port}/v2`;
     super(configuration);
   }
 }
@@ -30,7 +28,7 @@ class LanguageToolServiceMock extends LanguageToolService {
 const configuration: ILanguageToolServiceMockConfiguration = {
   host: "127.0.0.1",
   port: 8081,
-  baseURL: new URL("http://127.0.0.1:8081/v2"),
+  baseURL: "", // Will be set by constructor
   parameters: {
     language: "en-US",
     motherTongue: "en-US",
@@ -56,8 +54,15 @@ describe("#constructor()", function () {
 
 describe("#getBaseURL()", function () {
   it("should return a valid URL", function () {
-    const url: URL = service.getBaseURL();
+    const url: string = service.getBaseURL();
     url.should.equal(configuration.baseURL);
+  });
+});
+
+describe("#getLanguagetURL()", function () {
+  it("should return a valid URL", function () {
+    const url: string = service.getLanguagesURL();
+    url.should.equal(configuration.baseURL + "/languages");
   });
 });
 

@@ -75,10 +75,10 @@ export interface ILanguageToolService {
   check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>; // Check the annotated text
   languages(): Promise<ILanguageToolLanguage[]>; // Get the list of languages
   getState(): string; // Get the state of the service
-  getBaseURL(): URL; // Get the base URL of the service
-  getCheckURL(): URL; // Get the check URL of the service
-  getLanguagesURL(): URL; // Get the languages URL of the service
-  getRuleURL(ruleId: string, language: string): URL; // Get the rule base URI of the service
+  getBaseURL(): string; // Get the base URL of the service
+  getCheckURL(): string; // Get the check URL of the service
+  getLanguagesURL(): string; // Get the languages URL of the service
+  getRuleURL(ruleId: string, language: string): string; // Get the rule base URI of the service
   readonly DEFAULT_BASE_PATH: string; // "/v2"
   readonly DEFAULT_CHECK_PATH: string; // "/check"
   readonly DEFAULT_LANGUAGES_PATH: string; // "/languages"
@@ -94,10 +94,10 @@ export interface ILanguageToolService {
 }
 
 export interface ILanguageToolServiceConfiguration {
-  baseURL: URL; // Base URL for the service
+  baseURL: string; // Endpoint URL for the service
   checkPath?: string; // Path for the check endpoint (default: "/check")
   languagesPath?: string; // Path for the languages endpoint (default: "/languages")
-  ruleBaseURL?: URL; // Base URL for rules (default: "https://community.languagetool.org/rule/show/")
+  ruleBaseURL?: string; // Base URL for rules (default: "https://community.languagetool.org/rule/show/")
   parameters: {
     // see: https://languagetool.org/http-api/swagger-ui/#!/default/post_check
     language: string; // Language to check against

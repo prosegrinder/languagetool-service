@@ -28,9 +28,9 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   protected _configuration: ILanguageToolServiceConfiguration;
   protected _state: string = this.STATES.STOPPED;
-  protected _baseURL: URL;
+  protected _baseURL: string;
   protected _checkPath: string;
-  protected _ruleBaseURL: URL;
+  protected _ruleBaseURL: string;
   protected _languagesPath: string = this.DEFAULT_LANGUAGES_PATH;
 
   constructor(configuration: ILanguageToolServiceConfiguration) {
@@ -39,24 +39,23 @@ export abstract class LanguageToolService implements ILanguageToolService {
     this._checkPath = configuration.checkPath ?? this.DEFAULT_CHECK_PATH;
     this._languagesPath =
       configuration.languagesPath ?? this.DEFAULT_LANGUAGES_PATH;
-    this._ruleBaseURL =
-      configuration.ruleBaseURL ?? new URL(this.DEFAULT_RULE_BASE_URL);
+    this._ruleBaseURL = configuration.ruleBaseURL ?? this.DEFAULT_RULE_BASE_URL;
   }
 
-  public getBaseURL(): URL {
+  public getBaseURL(): string {
     return this._baseURL;
   }
 
-  public getCheckURL(): URL {
-    return new URL(this._checkPath, this.getBaseURL());
+  public getCheckURL(): string {
+    return `${this.getBaseURL()}${this._checkPath}`;
   }
 
-  public getLanguagesURL(): URL {
-    return new URL(this._languagesPath, this.getBaseURL());
+  public getLanguagesURL(): string {
+    return `${this.getBaseURL()}${this._languagesPath}`;
   }
 
-  public getRuleURL(ruleId: string, language: string): URL {
-    return new URL(`${ruleId}?language=${language}`, this._ruleBaseURL);
+  public getRuleURL(ruleId: string, language: string): string {
+    return `${this._ruleBaseURL}${ruleId}?language=${language}`;
   }
 
   public getState(): string {
@@ -180,7 +179,7 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   public languages(): Promise<ILanguageToolLanguage[]> {
     return new Promise((resolve, reject) => {
-      const url = this.getLanguagesURL().toString();
+      const url = this.getLanguagesURL();
       if (this.getState() === this.STATES.READY && url) {
         if (this.STATES.READY === this.getState()) {
           const options: Fetch.RequestInit = {
