@@ -12,21 +12,6 @@ chai.should();
 const assert = chai.assert;
 
 class LanguageToolServiceMock extends LanguageToolService {
-  constructor(configuration: ILanguageToolServiceConfiguration) {
-    super(configuration);
-  }
-
-  public setConfiguration(configuration: ILanguageToolServiceConfiguration) {
-    this._configuration = configuration;
-    this._baseUrl = `http://${configuration.host}:${configuration.port}/${configuration.basePath}`;
-    if (configuration.checkPath) {
-      this._checkPath = configuration.checkPath;
-    }
-    if (configuration.languagesPath) {
-      this._languagesPath = configuration.languagesPath;
-    }
-  }
-
   public isInstalled(): boolean {
     return true;
   }

@@ -14,25 +14,19 @@ npm install languagetool-server
 
 ## Usage
 
-Use this to implement concrete LanguageTool service classes.
+Use this to extend the LanguageTool service classes.
+
+You MUST implement:
+
+- `isInstalled()`
+- `install()`
+- `isUpdated()`
+- `update()`
+
+You MAY override and of the other methods as needed. You can also extend `ILanguageToolServiceConfiguration` to include additional configuration items per service.
 
 ```js
 class LanguageToolServiceMock extends LanguageToolService {
-  constructor(configuration: ILanguageToolServiceConfiguration) {
-    super(configuration);
-  }
-
-  public setConfiguration(configuration: ILanguageToolServiceConfiguration) {
-    this._configuration = configuration;
-    this._baseUrl = `http://${configuration.host}:${configuration.port}/${configuration.basePath}`;
-    if (configuration.checkPath) {
-      this._checkPath = configuration.checkPath;
-    }
-    if (configuration.languagesPath) {
-      this._languagesPath = configuration.languagesPath;
-    }
-  }
-
   public isInstalled(): boolean {
     return true;
   }
