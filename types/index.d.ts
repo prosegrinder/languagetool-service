@@ -71,51 +71,46 @@ export interface ILanguageToolService {
   stop(): Promise<boolean>; // Stop the service
   ping(): Promise<boolean>; // Ping the service
   info(): Promise<ILanguageToolInfo>; // Get info from the service
-  isInstalled(): boolean; // Check if the service is installed
-  install(): Promise<boolean>; // Install the service
-  isUpdated(): boolean; // Check if the service is updated
-  update(): Promise<boolean>; // Update the service
   getConfiguration(): ILanguageToolServiceConfiguration; // Get the configuration
-  setConfiguration(configuration: ILanguageToolServiceConfiguration): void; // Set the configuration
   check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>; // Check the annotated text
   languages(): Promise<ILanguageToolLanguage[]>; // Get the list of languages
   getState(): string; // Get the state of the service
-  getBaseURL(): string | undefined; // Get the base URL of the service
-  getCheckURL(): string | undefined; // Get the check URL of the service
-  getLanguagesURL(): string | undefined; // Get the languages URL of the service
-  getRuleURL(ruleId: string, language: string): string; // Get the rule base URI of the service
-  DEFAULT_CHECK_PATH: string; // "/check"
-  DEFAULT_LANGUAGES_PATH: string; // "/languages"
-  DEFAULT_RULE_BASE_URI: string; // "https://community.languagetool.org/rule/show/"
-  STATES: {
-    READY: string; // Service is ready
-    STARTING: string; // Service is starting
-    STOPPING: string; // Service is stopping
-    IDLE: string; // Service is idle
-    STOPPED: string; // Service is stopped
-    ERROR: string; // Service is in error state
+  getBaseURL(): URL; // Get the base URL of the service
+  getCheckURL(): URL; // Get the check URL of the service
+  getLanguagesURL(): URL; // Get the languages URL of the service
+  getRuleURL(ruleId: string, language: string): URL; // Get the rule base URI of the service
+  readonly DEFAULT_BASE_PATH: string; // "/v2"
+  readonly DEFAULT_CHECK_PATH: string; // "/check"
+  readonly DEFAULT_LANGUAGES_PATH: string; // "/languages"
+  readonly DEFAULT_RULE_BASE_URL: string; // "https://community.languagetool.org/rule/show/"
+  readonly STATES: {
+    readonly ERROR: string; // Service is in error state
+    readonly IDLE: string; // Service is idle
+    readonly READY: string; // Service is ready
+    readonly STARTING: string; // Service is starting
+    readonly STOPPED: string; // Service is stopped
+    readonly STOPPING: string; // Service is stopping
   };
 }
 
 export interface ILanguageToolServiceConfiguration {
-  host: string;
-  port: number;
-  basePath?: string;
-  checkPath?: string;
-  languagesPath?: string;
-  ruleBaseURI?: string;
+  baseURL: URL; // Base URL for the service
+  checkPath?: string; // Path for the check endpoint (default: "/check")
+  languagesPath?: string; // Path for the languages endpoint (default: "/languages")
+  ruleBaseURL?: URL; // Base URL for rules (default: "https://community.languagetool.org/rule/show/")
   parameters: {
-    language: string;
-    username?: string;
-    apiKey?: string;
-    dicts?: string[];
-    motherTongue?: string;
-    preferredVariants?: string[];
-    enabledRules?: string[];
-    disabledRules?: string[];
-    enabledCategories?: string[];
-    disabledCategories?: string[];
-    enabledOnly?: string; // "true" | "false"
-    level?: string; // "default" | "picky"
+    // see: https://languagetool.org/http-api/swagger-ui/#!/default/post_check
+    language: string; // Language to check against
+    username?: string; // Username for premium services
+    apiKey?: string; // API key for premium services
+    dicts?: string[]; // Dictionaries to use for premium services
+    motherTongue?: string; // Mother tongue
+    preferredVariants?: string[]; // Preferred variants
+    enabledRules?: string[]; // Enabled rules
+    disabledRules?: string[]; // Disabled rules
+    enabledCategories?: string[]; // Enabled categories
+    disabledCategories?: string[]; // Disabled categories
+    enabledOnly?: string; // Only use enabled rules: "true" | "false" (default: "false")
+    level?: string; // Enable additional picky rules: "default" | "picky" (default: "default")
   };
 }

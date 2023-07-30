@@ -11,32 +11,26 @@ chai.use(chaiAsPromised);
 chai.should();
 const assert = chai.assert;
 
+interface ILanguageToolServiceMockConfiguration
+  extends ILanguageToolServiceConfiguration {
+  host: string;
+  port: number;
+}
+
 class LanguageToolServiceMock extends LanguageToolService {
-  public isInstalled(): boolean {
-    return true;
-  }
-
-  public install(): Promise<boolean> {
-    return new Promise((resolve) => {
-      resolve(true);
-    });
-  }
-
-  public isUpdated(): boolean {
-    return true;
-  }
-
-  public update(): Promise<boolean> {
-    return new Promise((resolve) => {
-      resolve(true);
-    });
+  constructor(configuration: ILanguageToolServiceMockConfiguration) {
+    // Ensure baseURL matches host and port
+    configuration.baseURL = new URL(
+      `http://${configuration.host}:${configuration.port}/v2`,
+    );
+    super(configuration);
   }
 }
 
-const configuration: ILanguageToolServiceConfiguration = {
+const configuration: ILanguageToolServiceMockConfiguration = {
   host: "127.0.0.1",
   port: 8081,
-  basePath: "v2",
+  baseURL: new URL("http://127.0.0.1:8081/v2"),
   parameters: {
     language: "en-US",
     motherTongue: "en-US",
@@ -60,12 +54,10 @@ describe("#constructor()", function () {
   });
 });
 
-describe("#getURL()", function () {
+describe("#getBaseURL()", function () {
   it("should return a valid URL", function () {
-    const url: string = service.getBaseURL() as string;
-    url.should.equal(
-      `http://${configuration.host}:${configuration.port}/${configuration.basePath}`,
-    );
+    const url: URL = service.getBaseURL();
+    url.should.equal(configuration.baseURL);
   });
 });
 

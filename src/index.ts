@@ -17,9 +17,10 @@ export abstract class LanguageToolService implements ILanguageToolService {
     STOPPED: "stopped",
     ERROR: "error",
   };
+  public readonly DEFAULT_BASE_PATH: string = "/v2";
   public readonly DEFAULT_CHECK_PATH: string = "/check";
   public readonly DEFAULT_LANGUAGES_PATH: string = "/languages";
-  public readonly DEFAULT_RULE_BASE_URI: string =
+  public readonly DEFAULT_RULE_BASE_URL: string =
     "https://community.languagetool.org/rule/show/";
   protected readonly PING_DATA: IAnnotatedtext = {
     annotation: [{ text: "Ping.", offset: { start: 0, end: 4 } }],
@@ -27,30 +28,35 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   protected _configuration: ILanguageToolServiceConfiguration;
   protected _state: string = this.STATES.STOPPED;
-  protected _baseUrl: string | undefined = undefined;
-  protected _checkPath: string = this.DEFAULT_CHECK_PATH;
-  protected _ruleBaseURI: string = this.DEFAULT_RULE_BASE_URI;
+  protected _baseURL: URL;
+  protected _checkPath: string;
+  protected _ruleBaseURL: URL;
   protected _languagesPath: string = this.DEFAULT_LANGUAGES_PATH;
 
   constructor(configuration: ILanguageToolServiceConfiguration) {
     this._configuration = configuration;
-    this.setConfiguration(configuration);
+    this._baseURL = configuration.baseURL;
+    this._checkPath = configuration.checkPath ?? this.DEFAULT_CHECK_PATH;
+    this._languagesPath =
+      configuration.languagesPath ?? this.DEFAULT_LANGUAGES_PATH;
+    this._ruleBaseURL =
+      configuration.ruleBaseURL ?? new URL(this.DEFAULT_RULE_BASE_URL);
   }
 
-  public getBaseURL(): string | undefined {
-    return this._baseUrl;
+  public getBaseURL(): URL {
+    return this._baseURL;
   }
 
-  public getCheckURL(): string | undefined {
-    return this.getBaseURL() + this._checkPath;
+  public getCheckURL(): URL {
+    return new URL(this._checkPath, this.getBaseURL());
   }
 
-  public getLanguagesURL(): string | undefined {
-    return this.getBaseURL() + this._languagesPath;
+  public getLanguagesURL(): URL {
+    return new URL(this._languagesPath, this.getBaseURL());
   }
 
-  public getRuleURL(ruleId: string, language: string): string {
-    return `${this._ruleBaseURI}/${ruleId}?language=${language}`;
+  public getRuleURL(ruleId: string, language: string): URL {
+    return new URL(`${ruleId}?language=${language}`, this._ruleBaseURL);
   }
 
   public getState(): string {
@@ -59,22 +65,6 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   public getConfiguration(): ILanguageToolServiceConfiguration {
     return this._configuration;
-  }
-
-  public setConfiguration(
-    configuration: ILanguageToolServiceConfiguration,
-  ): void {
-    this._configuration = configuration;
-    this._baseUrl = `http://${configuration.host}:${configuration.port}/${configuration.basePath}`;
-    if (configuration.checkPath) {
-      this._checkPath = configuration.checkPath;
-    }
-    if (configuration.languagesPath) {
-      this._languagesPath = configuration.languagesPath;
-    }
-    if (configuration.ruleBaseURI) {
-      this._ruleBaseURI = configuration.ruleBaseURI;
-    }
   }
 
   public start(): Promise<boolean> {
@@ -190,7 +180,7 @@ export abstract class LanguageToolService implements ILanguageToolService {
 
   public languages(): Promise<ILanguageToolLanguage[]> {
     return new Promise((resolve, reject) => {
-      const url = this.getLanguagesURL() as string;
+      const url = this.getLanguagesURL().toString();
       if (this.getState() === this.STATES.READY && url) {
         if (this.STATES.READY === this.getState()) {
           const options: Fetch.RequestInit = {
@@ -252,9 +242,4 @@ export abstract class LanguageToolService implements ILanguageToolService {
       }
     });
   }
-
-  public abstract isInstalled(): boolean;
-  public abstract install(): Promise<boolean>;
-  public abstract isUpdated(): boolean;
-  public abstract update(): Promise<boolean>;
 }
