@@ -1,0 +1,51 @@
+{
+  "name": "languagetool-service",
+  "description": "A lightweight JavaScript library for managing a LanguageTool service.",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./out/index.js",
+  "types": "./types/index.d.ts",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf out/*",
+    "build": "tsc",
+    "rebuild": "npm run clean && npm run build",
+    "test-compile": "tsc",
+    "pretest": "npm run test-compile",
+    "test": "mocha --reporter spec ./out/tests/test.js",
+    "lint": "eslint ./src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prosegrinder/languagetool-service.git"
+  },
+  "keywords": [
+    "languagetool",
+    "service"
+  ],
+  "author": "David L. Day <david@davidlday.com> (https://www.davidlday.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prosegrinder/languagetool-service/issues"
+  },
+  "homepage": "https://github.com/prosegrinder/languagetool-service#readme",
+  "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsdoc": "^46.4.4",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "annotatedtext": "^1.1.4",
+    "node-fetch": "^3.3.1"
+  }
+}
