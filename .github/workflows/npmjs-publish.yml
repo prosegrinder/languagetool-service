@@ -14,8 +14,49 @@ jobs:
     uses: prosegrinder/.github/.github/workflows/npm-lint.yaml@main
 
   test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     needs: lint
-    uses: prosegrinder/.github/.github/workflows/npm-test.yaml@main
+    runs-on: ${{ matrix.os }}
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: lts/*
+          cache: "npm"
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Install Languagetool
+        id: install-languagetool
+        run: |
+          brew install languagetool jq
+      - name: Create Languagetool Log Directory
+        id: create-languagetool-log-directory
+        run: |
+          mkdir -p $(dirname $(brew services info languagetool --json| jq -r '.[0].log_path'))
+      - name: Start Languagetool
+        id: start-languagetool
+        run: |
+          brew services start languagetool
+          ps -ef | grep languagetool
+          brew services info languagetool --json | jq
+          sleep 5
+          tail $(brew services info languagetool --json| jq -r '.[0].log_path')
+          curl -L http://127.0.0.1:8081/v2/check -d "language=en-US&text=This+is+a+test+sentence." | jq
+      - name: NPM Clean Install
+        run: npm ci
+      - name: NPM Build
+        run: npm run build --if-present
+      - name: Test
+        run: npm test
+      - name: Test Pack
+        run: npm pack
 
   publish:
     runs-on: ubuntu-latest
