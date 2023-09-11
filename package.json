@@ -34,18 +34,18 @@
     "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.4",
-    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.45.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-prettier": "^8.9.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsdoc": "^46.4.4",
+    "eslint-plugin-jsdoc": "^46.4.5",
     "mocha": "^10.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "annotatedtext": "^1.1.4",
-    "node-fetch": "^3.3.1"
+    "node-fetch": "^3.3.2"
   }
 }
