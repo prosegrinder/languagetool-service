@@ -45,7 +45,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "annotatedtext": "^1.1.4",
+    "annotatedtext": "^1.2.0",
     "node-fetch": "^3.3.2"
   }
 }
