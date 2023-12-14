@@ -70,11 +70,11 @@ jobs:
         run: npm ci
       - name: Dry-Run Publish to npmjs
         id: dry-run
-        uses: JS-DevTools/npm-publish@v2
+        uses: JS-DevTools/npm-publish@v3
         with:
           dry-run: true
           token: ${{ secrets.NPM_ACCESS_TOKEN }}
       - name: Publish to npmjs
-        uses: JS-DevTools/npm-publish@v2
+        uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_ACCESS_TOKEN }}
