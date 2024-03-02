@@ -1,37 +1,24 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // "use strict";
 
+import { describe, it } from "mocha";
 import * as chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { LanguageToolService } from "../src/index.js";
-import { ILanguageToolServiceConfiguration } from "../types/index.d";
+import { Premium } from "../index.js";
+import { ILanguageToolServiceConfiguration } from "../types/index.js";
 import { IAnnotatedtext } from "annotatedtext";
 
 chai.use(chaiAsPromised);
 chai.should();
 const assert = chai.assert;
 
-interface ILanguageToolServiceMockConfiguration
-  extends ILanguageToolServiceConfiguration {
-  host: string;
-  port: number;
-}
-
-class LanguageToolServiceMock extends LanguageToolService {
-  constructor(configuration: ILanguageToolServiceMockConfiguration) {
-    // Ensure baseURL matches host and port
-    configuration.baseURL = `http://${configuration.host}:${configuration.port}/v2`;
-    super(configuration);
-  }
-}
-
-const configuration: ILanguageToolServiceMockConfiguration = {
-  host: "127.0.0.1",
-  port: 8081,
-  baseURL: "", // Will be set by constructor
+const configuration: ILanguageToolServiceConfiguration = {
+  baseURL: "https://api.languagetoolplus.com/v2/", // Will be set by constructor
   parameters: {
     language: "en-US",
     motherTongue: "en-US",
+    username: "test",
+    apiKey: "test",
   },
 };
 
@@ -44,11 +31,11 @@ const testDocument: IAnnotatedtext = {
   ],
 };
 
-const service = new LanguageToolServiceMock(configuration);
+const service = new Premium(configuration);
 
 describe("#constructor()", function () {
   it("should instantiate a new service", function () {
-    assert.instanceOf(service, LanguageToolService);
+    assert.instanceOf(service, Premium);
   });
 });
 
