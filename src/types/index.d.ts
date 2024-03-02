@@ -1,4 +1,4 @@
-import { IAnnotatedtext } from "annotatedtext";
+// import { IAnnotatedtext } from "annotatedtext";
 
 export interface ILanguageToolMatch {
   message: string;
@@ -66,32 +66,32 @@ export interface ILanguageToolResponse {
   matches: ILanguageToolMatch[];
 }
 
-export interface ILanguageToolService {
-  start(): Promise<boolean>; // Start the service
-  stop(): Promise<boolean>; // Stop the service
-  ping(): Promise<boolean>; // Ping the service
-  info(): Promise<ILanguageToolInfo>; // Get info from the service
-  getConfiguration(): ILanguageToolServiceConfiguration; // Get the configuration
-  check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>; // Check the annotated text
-  languages(): Promise<ILanguageToolLanguage[]>; // Get the list of languages
-  getState(): string; // Get the state of the service
-  getBaseURL(): string; // Get the base URL of the service
-  getCheckURL(): string; // Get the check URL of the service
-  getLanguagesURL(): string; // Get the languages URL of the service
-  getRuleURL(ruleId: string, language: string): string; // Get the rule base URI of the service
-  readonly DEFAULT_BASE_PATH: string; // "/v2"
-  readonly DEFAULT_CHECK_PATH: string; // "/check"
-  readonly DEFAULT_LANGUAGES_PATH: string; // "/languages"
-  readonly DEFAULT_RULE_BASE_URL: string; // "https://community.languagetool.org/rule/show/"
-  readonly STATES: {
-    readonly ERROR: string; // Service is in error state
-    readonly IDLE: string; // Service is idle
-    readonly READY: string; // Service is ready
-    readonly STARTING: string; // Service is starting
-    readonly STOPPED: string; // Service is stopped
-    readonly STOPPING: string; // Service is stopping
-  };
-}
+// export interface ILanguageToolService {
+//   start(): Promise<boolean>; // Start the service
+//   stop(): Promise<boolean>; // Stop the service
+//   ping(): Promise<boolean>; // Ping the service
+//   info(): Promise<ILanguageToolInfo>; // Get info from the service
+//   getConfiguration(): ILanguageToolServiceConfiguration; // Get the configuration
+//   check(annotatedText: IAnnotatedtext): Promise<ILanguageToolResponse>; // Check the annotated text
+//   languages(): Promise<ILanguageToolLanguage[]>; // Get the list of languages
+//   getState(): string; // Get the state of the service
+//   getBaseURL(): string; // Get the base URL of the service
+//   getCheckURL(): string; // Get the check URL of the service
+//   getLanguagesURL(): string; // Get the languages URL of the service
+//   getRuleURL(ruleId: string, language: string): string; // Get the rule base URI of the service
+//   readonly DEFAULT_BASE_PATH: string; // "/v2"
+//   readonly DEFAULT_CHECK_PATH: string; // "/check"
+//   readonly DEFAULT_LANGUAGES_PATH: string; // "/languages"
+//   readonly DEFAULT_RULE_BASE_URL: string; // "https://community.languagetool.org/rule/show/"
+//   readonly STATES: {
+//     readonly ERROR: string; // Service is in error state
+//     readonly IDLE: string; // Service is idle
+//     readonly READY: string; // Service is ready
+//     readonly STARTING: string; // Service is starting
+//     readonly STOPPED: string; // Service is stopped
+//     readonly STOPPING: string; // Service is stopping
+//   };
+// }
 
 export interface ILanguageToolServiceConfiguration {
   baseURL: string; // Endpoint URL for the service
