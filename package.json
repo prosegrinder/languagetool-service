@@ -1,7 +1,7 @@
 {
   "name": "languagetool-service",
   "description": "A lightweight JavaScript library for managing a LanguageTool service.",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "exports": "./out/index.js",
   "types": "./types/index.d.ts",
