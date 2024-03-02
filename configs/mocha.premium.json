@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/mocharc.json",
+  "exclude": [
+    "src/test/packages/**",
+    "src/test/slow/**"
+  ],
+  "extensions": [
+    "ts",
+    "tsx"
+  ],
+  "require": [
+    "ts-node/esm",
+    "ts-node/register"
+  ],
+  "loader": "ts-node/esm",
+  "reporter": "spec",
+  "spec": [
+    "src/tests/**/premium.test.ts"
+  ],
+  "timeout": 5000,
+  "watch-files": [
+    "src/**/*.ts"
+  ]
+}
